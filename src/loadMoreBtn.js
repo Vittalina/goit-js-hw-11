@@ -1,4 +1,4 @@
-// import '../css/style.css'
+// import './css/style.css'
 
 // export default class LoadMoreBtn {
 //     constructor ({ selector, hidden = false}) {

@@ -3,6 +3,7 @@ import './css/style.css'
 // import axios from "axios";
 import Notiflix from 'notiflix';
 import PictureApi from "./PictureApi";
+import loadMoreBtn from "./loadMoreBtn";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
@@ -12,7 +13,6 @@ const loadMoreBtn = document.querySelector(".load-more");
 
 const pictureApi = new PictureApi();
 let countPictures = 0;
-
 
 form.addEventListener("submit", onFormSearch);
 
@@ -34,21 +34,27 @@ function onFormSearch(event) {
             appendPicture(data.hits);
             countPictures = data.hits.length;
             Notiflix.Notify.success(`Hooray! We found ${data.totalHits} pictures.`);
+            lightbox.refresh();
         }
     }).catch(() => notiflixFailure());
 };
 
-// loadMoreBtn.addEventListener("click", onBtnClick);
+// loadMoreBtn.addEventListener("click", onLoadMore);
 
-// function onBtnClick() {
-
+// function onLoadMore(event) {
+//     event.preventDefault();
+    
 // }
+
+    let lightbox = new SimpleLightbox('.photo-card a', {
+        captionsData: 'alt',
+        captionDelay: 250,
+    });
 
 function createPictureCard(data) {
     return data.map(picture =>  `<div class="photo-card">
-    <a href="${picture.largeImageURL}">
+        <a href="${picture.largeImageURL}">
     <img class="photo-card__picture" src="${picture.webformatURL}" alt="${picture.tags}" loading="lazy" />
-    </a>
     <div class="info">
         <p class="info-item">
         <b>Likes: </b>${picture.likes}
@@ -63,6 +69,7 @@ function createPictureCard(data) {
         <b>Downloads: </b>${picture.downloads}
         </p>
     </div>
+        </a>
 </div>`).join("");
 }
 
@@ -75,7 +82,3 @@ function notiflixFailure() {
 function resetGallery() {
     gallery.innerHTML= '';
 }
-let galleryEl = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-});
