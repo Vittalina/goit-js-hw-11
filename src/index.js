@@ -3,7 +3,7 @@ import './css/style.css'
 // import axios from "axios";
 import Notiflix from 'notiflix';
 import PictureApi from "./PictureApi";
-import loadMoreBtn from "./loadMoreBtn";
+// import loadMoreBtn from "./loadMoreBtn";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
@@ -13,6 +13,11 @@ const loadMoreBtn = document.querySelector(".load-more");
 
 const pictureApi = new PictureApi();
 let countPictures = 0;
+
+let lightbox = new SimpleLightbox('.photo-card a', {
+        captionsData: 'alt',
+        captionDelay: 250,
+    });
 
 form.addEventListener("submit", onFormSearch);
 
@@ -25,7 +30,7 @@ function onFormSearch(event) {
     // console.log(searchForm);
     pictureApi.query = event.currentTarget.elements.searchQuery.value.trim();
     console.log(pictureApi.query);
-    
+    pictureApi.resetPage();
     // fetchPictures(searchForm).then(pictures => console.log(pictures));
     pictureApi.fetchPictures().then(data => {
         if (pictureApi.query === "") {
@@ -36,25 +41,37 @@ function onFormSearch(event) {
             Notiflix.Notify.success(`Hooray! We found ${data.totalHits} pictures.`);
             lightbox.refresh();
         }
+        if (data.totalHits > perPage) {
+        loadMoreBtn.classList.remove('is-hidden')
+        }
     }).catch(() => notiflixFailure());
 };
 
-// loadMoreBtn.addEventListener("click", onLoadMore);
+loadMoreBtn.addEventListener("click", onLoadMore);
 
-// function onLoadMore(event) {
-//     event.preventDefault();
-    
-// }
+function onLoadMore(event) {
+    event.preventDefault();
 
-    let lightbox = new SimpleLightbox('.photo-card a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-    });
+    pictureApi.fetchPictures().then(data => {
+        appendPicture(data.hits);
+        countPictures += data.hits.length;
+        console.log(countPictures);
+        lightbox.refresh();
+        
+        if (countPictures > data.totalHits) {
+            loadMoreBtn.classList.add('is-hidden');
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+        }
+    })
+
+}
+
 
 function createPictureCard(data) {
     return data.map(picture =>  `<div class="photo-card">
         <a href="${picture.largeImageURL}">
     <img class="photo-card__picture" src="${picture.webformatURL}" alt="${picture.tags}" loading="lazy" />
+        </a>
     <div class="info">
         <p class="info-item">
         <b>Likes: </b>${picture.likes}
@@ -69,7 +86,6 @@ function createPictureCard(data) {
         <b>Downloads: </b>${picture.downloads}
         </p>
     </div>
-        </a>
 </div>`).join("");
 }
 
