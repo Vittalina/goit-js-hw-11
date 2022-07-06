@@ -40,7 +40,7 @@ function onFormSearch(event) {
             Notiflix.Notify.success(`Hooray! We found ${data.totalHits} pictures.`);
             lightbox.refresh();
         }
-        if (data.totalHits > perPage) {
+        if (data.totalHits > pictureApi.perPage) {
         loadMoreBtn.classList.remove('is-hidden')
         }
     }).catch(error =>  console.log(error));
