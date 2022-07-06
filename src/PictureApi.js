@@ -4,24 +4,28 @@ export default class PictureApi {
     constructor() {
         this.searchQueryPicture = '';
         this.page = 1;
+        this.perPage = 40;
     }
 
-    // async
-    fetchPictures() {
+    async fetchPictures() {
         const BASE_URL = "https://pixabay.com/api/";
         const MY_API_KEY = "28384939-76d0db34094acd1949cd365d2";
         
-        // const response = await 
-        return axios.get(`${BASE_URL}?key=${MY_API_KEY}&q=${this.searchQueryPicture}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`)
-            .then(response => {
-                    this.incrementPage();
+        const response = await 
+        // return
+        axios.get(`${BASE_URL}?key=${MY_API_KEY}&q=${this.searchQueryPicture}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.perPage}&page=${this.page}`)
+            // .then(response => {
+            //         this.incrementPage();
 
-                return response.data;
-                });    
+            //     return response.data;
+            //     });    
+    // }
+                .then(response => {
+                    this.incrementPage();
+                    return response.data
+                })
+        return await response;
     }
-            // (response => { return response.data })
-//         return await response;
-//     }
 // }
     get query() {
         return this.searchQueryPicture;

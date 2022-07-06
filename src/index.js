@@ -3,7 +3,6 @@ import './css/style.css'
 // import axios from "axios";
 import Notiflix from 'notiflix';
 import PictureApi from "./PictureApi";
-// import loadMoreBtn from "./loadMoreBtn";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
@@ -17,7 +16,7 @@ let countPictures = 0;
 let lightbox = new SimpleLightbox('.photo-card a', {
         captionsData: 'alt',
         captionDelay: 250,
-    });
+});
 
 form.addEventListener("submit", onFormSearch);
 
@@ -33,7 +32,7 @@ function onFormSearch(event) {
     pictureApi.resetPage();
     // fetchPictures(searchForm).then(pictures => console.log(pictures));
     pictureApi.fetchPictures().then(data => {
-        if (pictureApi.query === "") {
+        if (data.totalHits === 0 || pictureApi.query === "") {
             notiflixFailure();
         } else {
             appendPicture(data.hits);
@@ -44,7 +43,8 @@ function onFormSearch(event) {
         if (data.totalHits > perPage) {
         loadMoreBtn.classList.remove('is-hidden')
         }
-    }).catch(() => notiflixFailure());
+    }).catch(error =>  console.log(error));
+        // (() => notiflixFailure());
 };
 
 loadMoreBtn.addEventListener("click", onLoadMore);
@@ -65,7 +65,6 @@ function onLoadMore(event) {
     })
 
 }
-
 
 function createPictureCard(data) {
     return data.map(picture =>  `<div class="photo-card">
