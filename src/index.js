@@ -32,6 +32,7 @@ function onFormSearch(event) {
     pictureApi.resetPage();
     // fetchPictures(searchForm).then(pictures => console.log(pictures));
     pictureApi.fetchPictures().then(data => {
+            loadMoreBtn.style.display = data.hits.length < pictureApi.perPage ? 'none' : 'block';
         if (data.totalHits === 0 || pictureApi.query === "") {
             notiflixFailure();
         } else {
@@ -50,20 +51,20 @@ function onFormSearch(event) {
 loadMoreBtn.addEventListener("click", onLoadMore);
 
 function onLoadMore(event) {
-    event.preventDefault();
+    // event.preventDefault();
 
     pictureApi.fetchPictures().then(data => {
         appendPicture(data.hits);
         countPictures += data.hits.length;
         console.log(countPictures);
         lightbox.refresh();
-        
-        if (countPictures > data.totalHits) {
-            loadMoreBtn.classList.add('is-hidden');
-            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-        }
-    })
 
+        if (countPictures > data.totalHits) {
+        loadMoreBtn.style.display = 'none';
+
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+        } 
+    })
 }
 
 function createPictureCard(data) {
