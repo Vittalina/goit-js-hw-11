@@ -44,7 +44,6 @@ function onFormSearch(event) {
         loadMoreBtn.classList.remove('is-hidden')
         }
     }).catch(error =>  console.log(error));
-        // (() => notiflixFailure());
 };
 
 loadMoreBtn.addEventListener("click", onLoadMore);
