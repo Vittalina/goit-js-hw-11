@@ -57,11 +57,16 @@ function onLoadMore(event) {
         console.log(countPictures);
         lightbox.refresh();
 
-        if (countPictures > data.totalHits) {
+        if (countPictures > data.totalHits || data.hits.length < pictureApi.perPage) {
         loadMoreBtn.style.display = 'none';
 
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
         } 
+        // if (countPictures > data.totalHits) {
+        // loadMoreBtn.style.display = 'none';
+
+        // Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+        // } 
     })
 }
 
