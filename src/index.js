@@ -24,13 +24,12 @@ function onFormSearch(event) {
     event.preventDefault();
 
     resetGallery()
+    loadMoreBtn.style.display = 'none';
 
-    // const searchForm = form.elements.searchQuery.value.trim();
-    // console.log(searchForm);
     pictureApi.query = event.currentTarget.elements.searchQuery.value.trim();
     console.log(pictureApi.query);
     pictureApi.resetPage();
-    // fetchPictures(searchForm).then(pictures => console.log(pictures));
+
     pictureApi.fetchPictures().then(data => {
             loadMoreBtn.style.display = data.hits.length < pictureApi.perPage ? 'none' : 'block';
         if (data.totalHits === 0 || pictureApi.query === "") {
@@ -62,7 +61,7 @@ function onLoadMore(event) {
         if (countPictures > data.totalHits) {
         loadMoreBtn.style.display = 'none';
 
-            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
         } 
     })
 }
